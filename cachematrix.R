@@ -1,11 +1,11 @@
+## These two functions make a special matrix object and cache the inverse of it.
 ## 
-## firstly, makeCacheMatrix(matrix), which stores 
-## mat <- makeCacheMatrix(matrix(1:6, nrow=2, ncol=4))
+## Firstly, call makeCacheMatrix(matrix) and make an object.
+## example : mat <- makeCacheMatrix(matrix(c(1,3,4,5,6,7,8,9,10), nrow=3, ncol=3))
 ##
-## then cacheSolve(mat) was called for the first time,
-## 
-##
-## cacheSolve(mat) 
+## The function cacheSolve(mat) is called for the first time,
+## then computes inverse of matrix and stores the result.
+## And if cacheSolve(mat) is called again, then returns cached result.
 
 ## This function makes a list of function: set() ,get(), setinverse(), and getinverse(),
 ## which is called by "cacheSolve" function.
@@ -25,11 +25,19 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## This function returns the inverse of "makeCacheMatrix" object
-## 
+## This function returns the inverse of "makeCacheMatrix" object.
+## If matrix that is not invertible is passed, then it displays an error message and returns NULL.
 
 cacheSolve <- function(x, ...) {
-    ## Return a matrix that is the inverse of 'x'
+    data <- x$get()
+    if(ncol(data) != nrow(data)) {
+        message("\'x\' must be square matrix")
+        return(NULL)
+    }
+    if(det(data) == 0) {
+        message("\'det(x)\' must not be zero")
+        return(NULL)
+    }
     inv <- x$getinverse()
     if(!is.null(inv)) {
         message("getting cached data")
